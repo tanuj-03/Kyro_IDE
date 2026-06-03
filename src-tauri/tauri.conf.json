@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Kyro IDE",
+  "version": "0.2.0",
+  "identifier": "dev.kyro.ide",
+  "build": {
+    "beforeDevCommand": "bun install && bun run dev",
+    "devUrl": "http://localhost:3000",
+    "beforeBuildCommand": "bun install && bun run build",
+    "frontendDist": "../out"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Kyro IDE",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 800,
+        "minHeight": 600,
+        "center": true,
+        "decorations": true,
+        "transparent": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' ws://localhost:* wss://* https://huggingface.co https://open-vsx.org; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Development",
+    "shortDescription": "AI-Powered Code Editor",
+    "longDescription": "Kyro IDE - AI-native code editor with local LLM support (AirLLM, Ollama, PicoClaw)",
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0"]
+      }
+    },
+    "windows": {
+      "allowDowngrades": false,
+      "webviewInstallMode": {
+        "type": "embedBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "installMode": "both",
+        "displayLanguageSelector": true,
+        "languages": [
+          "English"
+        ],
+        "startMenuFolder": "Kyro IDE",
+        "installerHooks": "windows/installer-hooks.nsh"
+      },
+      "wix": {
+        "language": "en-US"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    },
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4Q0RDNDdGQ0VFMkM2NDYKUldSR3h1TE9mOFRONkFyOFF1aStNNUZHRjAwMWpPdTFPZ0ZTcTRSdXFOTmY4VWF1QXdQV3JxUzEK",
+      "endpoints": [
+        "https://github.com/nkpendyam/Kyro_IDE/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}
