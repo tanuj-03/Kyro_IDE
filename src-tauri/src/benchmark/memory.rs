@@ -209,19 +209,21 @@ impl MemoryMonitor {
         #[cfg(target_os = "macos")]
         {
             use std::mem::size_of;
-            let mut info: libc::task_vm_info_data_t = unsafe { std::mem::zeroed() };
-            let count = (size_of::<libc::task_vm_info_data_t>() / size_of::<libc::natural_t>())
+            let mut info: libc::vm_statistics64_data_t = unsafe { std::mem::zeroed() };
+            let mut count = (size_of::<libc::vm_statistics64_data_t>() / size_of::<libc::natural_t>())
                 as libc::mach_msg_type_number_t;
 
             unsafe {
-                let result = libc::task_info(
-                    libc::mach_task_self(),
-                    libc::TASK_VM_INFO,
+                let result = libc::host_statistics64(
+                    libc::mach_host_self(),
+                    libc::HOST_VM_INFO64,
                     &mut info as *mut _ as *mut libc::integer_t,
                     &mut count,
                 );
                 if result == libc::KERN_SUCCESS {
-                    return info.resident_size;
+                    // Calculate resident memory from vm_statistics64
+                    let page_size = libc::sysconf(libc::_SC_PAGE_SIZE) as u64;
+                    return (info.resident_count as u64) * page_size;
                 }
             }
         }
